@@ -21,6 +21,7 @@ const navItems = [
   { title: "Transactions", url: "/dashboard/transactions", icon: Receipt },
   { title: "Deposits", url: "/dashboard/deposits", icon: Wallet },
   { title: "Agent Stats", url: "/dashboard/agent-stats", icon: UserCheck },
+  { title: "Agent Daily", url: "/dashboard/agent-daily", icon: UserCheck },
   { title: "Commissions", url: "/dashboard/commissions", icon: Coins },
   { title: "Agent Config", url: "/dashboard/agent-config", icon: Settings },
 ];

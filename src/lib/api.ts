@@ -57,6 +57,13 @@ export const fetchAgentConfig = () => api.get('/api/admin/agent-config');
 export const updateAgentConfig = (comRates: number[]) =>
   api.put('/api/admin/agent-config', { comRates });
 
+// Agent Daily
+export const fetchAgentDaily = (userId: string, date?: string) => {
+  const params = new URLSearchParams({ userId });
+  if (date) params.set('date', date);
+  return api.get(`/api/admin/agent-daily?${params.toString()}`);
+};
+
 // Agent Commissions (admin)
 export const fetchAgentCommissions = (
   recUser: string,

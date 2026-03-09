@@ -13,6 +13,7 @@ import Deposits from "./pages/Deposits";
 import AgentStats from "./pages/AgentStats";
 import AgentConfig from "./pages/AgentConfig";
 import AgentCommissions from "./pages/AgentCommissions";
+import AgentDaily from "./pages/AgentDaily";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
               <Route path="transactions" element={<Transactions />} />
               <Route path="deposits" element={<Deposits />} />
               <Route path="agent-stats" element={<AgentStats />} />
+              <Route path="agent-daily" element={<AgentDaily />} />
               <Route path="commissions" element={<AgentCommissions />} />
               <Route path="agent-config" element={<AgentConfig />} />
             </Route>
