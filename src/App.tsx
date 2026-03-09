@@ -1,0 +1,46 @@
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
+import Login from "./pages/Login";
+import AdminLayout from "./components/AdminLayout";
+import Dashboard from "./pages/Dashboard";
+import UserSearch from "./pages/UserSearch";
+import Transactions from "./pages/Transactions";
+import Deposits from "./pages/Deposits";
+import AgentStats from "./pages/AgentStats";
+import AgentConfig from "./pages/AgentConfig";
+import AgentCommissions from "./pages/AgentCommissions";
+import NotFound from "./pages/NotFound";
+
+const queryClient = new QueryClient();
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/dashboard" element={<AdminLayout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="users" element={<UserSearch />} />
+              <Route path="transactions" element={<Transactions />} />
+              <Route path="deposits" element={<Deposits />} />
+              <Route path="agent-stats" element={<AgentStats />} />
+              <Route path="commissions" element={<AgentCommissions />} />
+              <Route path="agent-config" element={<AgentConfig />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
+  </QueryClientProvider>
+);
+
+export default App;
