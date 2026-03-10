@@ -89,3 +89,7 @@ export const fetchAdminLogs = (params?: { level?: 'info' | 'error'; since?: stri
   if (params?.limit) query.set('limit', String(params.limit));
   return api.get(`/api/admin/logs?${query.toString()}`);
 };
+
+// VIP Config
+export const fetchVipConfig = () => api.get('/api/admin/vip-config');
+export const updateVipConfig = (levels: any[]) => api.put('/api/admin/vip-config', { levels });

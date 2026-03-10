@@ -15,6 +15,7 @@ import AgentConfig from "./pages/AgentConfig";
 import AgentCommissions from "./pages/AgentCommissions";
 import AgentDaily from "./pages/AgentDaily";
 import AdminLogs from "./pages/AdminLogs";
+import VipConfig from "./pages/VipConfig";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
               <Route path="commissions" element={<AgentCommissions />} />
               <Route path="agent-config" element={<AgentConfig />} />
               <Route path="logs" element={<AdminLogs />} />
+              <Route path="vip-config" element={<VipConfig />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

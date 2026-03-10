@@ -12,6 +12,7 @@ import {
   X,
   LogOut,
   FileText,
+  Crown,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
@@ -25,6 +26,7 @@ const navItems = [
   { title: "Agent Daily", url: "/dashboard/agent-daily", icon: UserCheck },
   { title: "Commissions", url: "/dashboard/commissions", icon: Coins },
   { title: "Agent Config", url: "/dashboard/agent-config", icon: Settings },
+  { title: "VIP Config", url: "/dashboard/vip-config", icon: Crown },
   { title: "Admin Logs", url: "/dashboard/logs", icon: FileText },
 ];
 
