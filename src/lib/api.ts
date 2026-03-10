@@ -33,6 +33,14 @@ export const fetchDashboard = () => api.get('/api/admin/dashboard');
 // User search
 export const searchUser = (userId: string) => api.get(`/api/admin/user?userId=${userId}`);
 
+// Change User Status
+export const updateUserStatus = (userId: number, status: 'active' | 'suspended' | 'inactive', remark?: string) =>
+  api.patch('/api/admin/user', { userId, status, remark });
+
+// Override User Bank
+export const overrideUserBank = (userId: number, bankName: string, bankCode: string, accountNumber: string, accountHolder: string) =>
+  api.put('/api/admin/user/bind-bank', { userId, bankName, bankCode, accountNumber, accountHolder });
+
 // Transactions
 export const fetchTransactions = (userId: string, page = 1, limit = 25) =>
   api.get(`/api/admin/transactions?userId=${userId}&page=${page}&limit=${limit}`);

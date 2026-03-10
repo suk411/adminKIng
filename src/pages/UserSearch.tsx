@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { searchUser, setAuthToken } from '@/lib/api';
+import { searchUser, updateUserStatus, overrideUserBank, setAuthToken } from '@/lib/api';
 import { toast } from 'sonner';
 import SearchBar from '@/components/SearchBar';
 import LastUpdated from '@/components/LastUpdated';
-import { ShieldAlert, ShieldCheck, Smartphone, Globe, Fingerprint } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from '@/components/ui/dialog';
+import { ShieldAlert, ShieldCheck, Smartphone, Globe, Fingerprint, Banknote, Loader2 } from 'lucide-react';
 
 const UserSearch = () => {
   const { token } = useAuth();
@@ -12,6 +15,18 @@ const UserSearch = () => {
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
+  
+  const [statusDialogOpen, setStatusDialogOpen] = useState(false);
+  const [statusLoading, setStatusLoading] = useState(false);
+  const [newStatus, setNewStatus] = useState<'active' | 'suspended' | 'inactive'>('active');
+  const [statusRemark, setStatusRemark] = useState('');
+  
+  const [bankDialogOpen, setBankDialogOpen] = useState(false);
+  const [bankLoading, setBankLoading] = useState(false);
+  const [bankName, setBankName] = useState('');
+  const [bankCode, setBankCode] = useState('');
+  const [accountNumber, setAccountNumber] = useState('');
+  const [accountHolder, setAccountHolder] = useState('');
 
   const handleSearch = async () => {
     if (!userId.trim()) return;
@@ -22,6 +37,10 @@ const UserSearch = () => {
       const res = await searchUser(userId.trim());
       setResult(res.data);
       setUpdatedAt(new Date());
+      setBankName('');
+      setBankCode('');
+      setAccountNumber('');
+      setAccountHolder('');
     } catch (err: any) {
       toast.error(err.response?.data?.msg || err.response?.data?.message || 'User not found');
     } finally {
@@ -29,7 +48,41 @@ const UserSearch = () => {
     }
   };
 
+  const handleStatusChange = async () => {
+    if (!user?.userId) return;
+    setAuthToken(token);
+    setStatusLoading(true);
+    try {
+      const res = await updateUserStatus(user.userId, newStatus, statusRemark);
+      toast.success(res.data.msg || 'Status updated');
+      setStatusDialogOpen(false);
+      setStatusRemark('');
+      handleSearch();
+    } catch (err: any) {
+      toast.error(err.response?.data?.msg || 'Failed to update status');
+    } finally {
+      setStatusLoading(false);
+    }
+  };
+
+  const handleBankOverride = async () => {
+    if (!user?.userId) return;
+    setAuthToken(token);
+    setBankLoading(true);
+    try {
+      const res = await overrideUserBank(user.userId, bankName, bankCode, accountNumber, accountHolder);
+      toast.success(res.data.msg || 'Bank updated');
+      setBankDialogOpen(false);
+      handleSearch();
+    } catch (err: any) {
+      toast.error(err.response?.data?.msg || 'Failed to update bank');
+    } finally {
+      setBankLoading(false);
+    }
+  };
+
   const { user, account, deviceRisk } = result || {};
+  const currentUserId = user?.userId;
 
   return (
     <div className="space-y-6">
@@ -52,14 +105,62 @@ const UserSearch = () => {
           )}
           {account && (
             <div className="bg-card border border-border rounded-xl p-6 space-y-3">
-              <h3 className="text-lg font-semibold text-foreground">Account</h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-foreground">Account</h3>
+                <Button variant="outline" size="sm" onClick={() => setStatusDialogOpen(true)}>
+                  Change Status
+                </Button>
+              </div>
               <InfoRow label="Balance" value={`₹${account.balance?.toLocaleString()}`} />
               <InfoRow label="Currency" value={account.currency} />
-              <InfoRow label="Status" value={account.status} />
+              <InfoRow 
+                label="Status" 
+                value={
+                  <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+                    account.status === 'active' ? 'bg-green-500/20 text-green-400' :
+                    account.status === 'suspended' ? 'bg-yellow-500/20 text-yellow-400' :
+                    'bg-red-500/20 text-red-400'
+                  }`}>
+                    {account.status}
+                  </span>
+                } 
+              />
+              {account.statusRemark && (
+                <InfoRow label="Remark" value={account.statusRemark} />
+              )}
+              <InfoRow label="VIP Level" value={account.vipLevel || '—'} />
+              <InfoRow label="Withdraw Daily Limit" value={`₹${account.withdrawDailyLimit?.toLocaleString()}`} />
               <InfoRow label="Created" value={new Date(account.createdAt).toLocaleString()} />
-              <InfoRow label="Updated" value={new Date(account.updatedAt).toLocaleString()} />
             </div>
           )}
+        </div>
+      )}
+
+      {account?.bindAccount && (
+        <div className="bg-card border border-border rounded-xl p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+              <Banknote className="w-5 h-5" />
+              Bound Bank Account
+            </h3>
+            <Button variant="outline" size="sm" onClick={() => {
+              const b = account.bindAccount;
+              setBankName(b.bankName || '');
+              setBankCode(b.bankCode || '');
+              setAccountNumber(b.accountNumber || '');
+              setAccountHolder(b.accountHolder || '');
+              setBankDialogOpen(true);
+            }}>
+              Override Bank
+            </Button>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <InfoRow label="Bank Name" value={account.bindAccount.bankName} />
+            <InfoRow label="IFSC Code" value={account.bindAccount.bankCode} />
+            <InfoRow label="Account Number" value={account.bindAccount.accountNumber} />
+            <InfoRow label="Holder Name" value={account.bindAccount.accountHolder} />
+            <InfoRow label="Bound At" value={account.bindAccount.boundAt ? new Date(account.bindAccount.boundAt).toLocaleString() : '—'} />
+          </div>
         </div>
       )}
 
@@ -100,6 +201,7 @@ const UserSearch = () => {
                 <Smartphone className="w-4 h-4" /> Device Info
               </h4>
               <InfoRow label="Device ID" value={deviceRisk.latest?.deviceId || '—'} />
+              <InfoRow label="Ad ID" value={deviceRisk.latest?.adId || '—'} />
               <InfoRow label="Fingerprint" value={deviceRisk.latest?.fingerprint || '—'} />
               <InfoRow label="Platform" value={deviceRisk.latest?.platform || '—'} />
               <InfoRow label="Browser" value={deviceRisk.latest?.browser || '—'} />
@@ -132,6 +234,76 @@ const UserSearch = () => {
           </div>
         </div>
       )}
+
+      <Dialog open={statusDialogOpen} onOpenChange={setStatusDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Change User Status</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Status</label>
+              <select
+                value={newStatus}
+                onChange={(e) => setNewStatus(e.target.value as any)}
+                className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
+              >
+                <option value="active">Active</option>
+                <option value="suspended">Suspended</option>
+                <option value="inactive">Inactive (Ban)</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Remark (optional)</label>
+              <Input
+                value={statusRemark}
+                onChange={(e) => setStatusRemark(e.target.value)}
+                placeholder="Reason for status change..."
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setStatusDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleStatusChange} disabled={statusLoading}>
+              {statusLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+              Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={bankDialogOpen} onOpenChange={setBankDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Override Bank Account</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Bank Name</label>
+              <Input value={bankName} onChange={(e) => setBankName(e.target.value)} placeholder="e.g., HDFC" />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">IFSC Code</label>
+              <Input value={bankCode} onChange={(e) => setBankCode(e.target.value)} placeholder="e.g., HDFC0001234" />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Account Number</label>
+              <Input value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} placeholder="e.g., XXXXXX4321" />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Account Holder</label>
+              <Input value={accountHolder} onChange={(e) => setAccountHolder(e.target.value)} placeholder="e.g., Rahul" />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setBankDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleBankOverride} disabled={bankLoading || !bankName || !bankCode || !accountNumber || !accountHolder}>
+              {bankLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+              Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
