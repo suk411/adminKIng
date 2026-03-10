@@ -14,6 +14,7 @@ import AgentStats from "./pages/AgentStats";
 import AgentConfig from "./pages/AgentConfig";
 import AgentCommissions from "./pages/AgentCommissions";
 import AgentDaily from "./pages/AgentDaily";
+import AdminLogs from "./pages/AdminLogs";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const App = () => (
               <Route path="agent-daily" element={<AgentDaily />} />
               <Route path="commissions" element={<AgentCommissions />} />
               <Route path="agent-config" element={<AgentConfig />} />
+              <Route path="logs" element={<AdminLogs />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

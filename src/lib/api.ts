@@ -80,3 +80,12 @@ export const fetchAgentCommissions = (
 
 export const claimAgentCommission = (recUser: number, upTo?: string) =>
   api.post('/api/admin/agent/commissions/claim', { recUser, upTo });
+
+// Admin Logs
+export const fetchAdminLogs = (params?: { level?: 'info' | 'error'; since?: string; limit?: number }) => {
+  const query = new URLSearchParams();
+  if (params?.level) query.set('level', params.level);
+  if (params?.since) query.set('since', params.since);
+  if (params?.limit) query.set('limit', String(params.limit));
+  return api.get(`/api/admin/logs?${query.toString()}`);
+};

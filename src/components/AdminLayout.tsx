@@ -11,6 +11,7 @@ import {
   Menu,
   X,
   LogOut,
+  FileText,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
@@ -24,6 +25,7 @@ const navItems = [
   { title: "Agent Daily", url: "/dashboard/agent-daily", icon: UserCheck },
   { title: "Commissions", url: "/dashboard/commissions", icon: Coins },
   { title: "Agent Config", url: "/dashboard/agent-config", icon: Settings },
+  { title: "Admin Logs", url: "/dashboard/logs", icon: FileText },
 ];
 
 const AdminLayout = () => {
