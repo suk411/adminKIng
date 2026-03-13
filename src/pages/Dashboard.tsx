@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { fetchDashboard, setAuthToken } from '@/lib/api';
 import { toast } from 'sonner';
 import LastUpdated from '@/components/LastUpdated';
+import Loading from '@/components/Loading';
 
 const Dashboard = () => {
   const { token } = useAuth();
@@ -32,7 +33,7 @@ const Dashboard = () => {
   if (loading && !stats) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        <Loading />
       </div>
     );
   }

@@ -4,8 +4,8 @@ import { fetchAgentDaily, setAuthToken } from '@/lib/api';
 import { toast } from 'sonner';
 import SearchBar from '@/components/SearchBar';
 import LastUpdated from '@/components/LastUpdated';
+import Loading from '@/components/Loading';
 import { Input } from '@/components/ui/input';
-import { Loader2 } from 'lucide-react';
 
 const AgentDaily = () => {
   const { token } = useAuth();

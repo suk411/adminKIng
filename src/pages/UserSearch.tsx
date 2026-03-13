@@ -4,10 +4,11 @@ import { searchUser, updateUserStatus, overrideUserBank, setAuthToken } from '@/
 import { toast } from 'sonner';
 import SearchBar from '@/components/SearchBar';
 import LastUpdated from '@/components/LastUpdated';
+import Loading from '@/components/Loading';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from '@/components/ui/dialog';
-import { ShieldAlert, ShieldCheck, Smartphone, Globe, Fingerprint, Banknote, Loader2 } from 'lucide-react';
+import { ShieldAlert, ShieldCheck, Smartphone, Globe, Fingerprint, Banknote } from 'lucide-react';
 
 const UserSearch = () => {
   const { token } = useAuth();
@@ -265,7 +266,7 @@ const UserSearch = () => {
           <DialogFooter>
             <Button variant="outline" onClick={() => setStatusDialogOpen(false)}>Cancel</Button>
             <Button onClick={handleStatusChange} disabled={statusLoading}>
-              {statusLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+              {statusLoading && <Loading size={16} />}
               Save
             </Button>
           </DialogFooter>
@@ -298,7 +299,7 @@ const UserSearch = () => {
           <DialogFooter>
             <Button variant="outline" onClick={() => setBankDialogOpen(false)}>Cancel</Button>
             <Button onClick={handleBankOverride} disabled={bankLoading || !bankName || !bankCode || !accountNumber || !accountHolder}>
-              {bankLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+              {bankLoading && <Loading size={16} />}
               Save
             </Button>
           </DialogFooter>

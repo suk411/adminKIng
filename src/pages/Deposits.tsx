@@ -4,8 +4,9 @@ import { fetchDepositsByUser, fetchDepositByOrder, approveDeposit, setAuthToken 
 import { toast } from 'sonner';
 import SearchBar from '@/components/SearchBar';
 import LastUpdated from '@/components/LastUpdated';
+import Loading from '@/components/Loading';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, CheckCircle, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle } from 'lucide-react';
 
 const statusColor: Record<string, string> = {
   SUCCESS: 'bg-primary/20 text-primary',
@@ -142,7 +143,7 @@ const Deposits = () => {
                             onClick={() => handleApprove(d.orderId)}
                           >
                             {approvingId === d.orderId ? (
-                              <Loader2 className="w-4 h-4 animate-spin" />
+                              <Loading size={16} />
                             ) : (
                               <CheckCircle className="w-4 h-4" />
                             )}

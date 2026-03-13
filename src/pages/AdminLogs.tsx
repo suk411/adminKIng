@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { fetchAdminLogs, setAuthToken } from '@/lib/api';
 import { toast } from 'sonner';
+import Loading from '@/components/Loading';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2, RefreshCw, ChevronDown, ChevronRight } from 'lucide-react';
+import { RefreshCw, ChevronDown, ChevronRight } from 'lucide-react';
 
 const AdminLogs = () => {
   const { token } = useAuth();
@@ -82,7 +83,7 @@ const AdminLogs = () => {
             />
           </div>
           <Button onClick={loadLogs} disabled={loading} variant="outline">
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+            {loading ? <Loading size={16} /> : <RefreshCw className="w-4 h-4" />}
             Apply
           </Button>
         </div>

@@ -4,9 +4,10 @@ import { fetchAgentCommissions, claimAgentCommission, setAuthToken } from '@/lib
 import { toast } from 'sonner';
 import SearchBar from '@/components/SearchBar';
 import LastUpdated from '@/components/LastUpdated';
+import Loading from '@/components/Loading';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ChevronLeft, ChevronRight, Loader2, DollarSign } from 'lucide-react';
+import { ChevronLeft, ChevronRight, DollarSign } from 'lucide-react';
 
 const AgentCommissions = () => {
   const { token } = useAuth();
@@ -96,7 +97,7 @@ const AgentCommissions = () => {
           <LastUpdated timestamp={updatedAt} onRefresh={() => loadCommissions(page)} loading={loading} />
           {data?.items && (
             <Button variant="destructive" size="sm" onClick={handleClaim} disabled={claiming || !recUser.trim()}>
-              {claiming ? <Loader2 className="w-4 h-4 animate-spin" /> : <DollarSign className="w-4 h-4" />}
+              {claiming ? <Loading size={16} /> : <DollarSign className="w-4 h-4" />}
               Claim All Unclaimed
             </Button>
           )}

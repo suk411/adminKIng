@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { fetchAgentConfig, updateAgentConfig, setAuthToken } from '@/lib/api';
 import { toast } from 'sonner';
+import Loading from '@/components/Loading';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2, Save, RefreshCw } from 'lucide-react';
+import { Save, RefreshCw } from 'lucide-react';
 
 const AgentConfig = () => {
   const { token } = useAuth();
@@ -68,7 +69,7 @@ const AgentConfig = () => {
 
       {loading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-6 h-6 animate-spin text-primary" />
+          <Loading />
         </div>
       ) : (
         <div className="bg-card border border-border rounded-xl p-6 space-y-6">
@@ -92,7 +93,7 @@ const AgentConfig = () => {
 
           <div className="flex justify-end pt-4 border-t border-border">
             <Button onClick={handleSave} disabled={saving}>
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+              {saving ? <Loading size={16} /> : <Save className="w-4 h-4" />}
               Save Changes
             </Button>
           </div>
