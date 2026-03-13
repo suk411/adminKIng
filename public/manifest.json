@@ -1,6 +1,6 @@
 {
-  "name": "Admin Panel",
-  "short_name": "Admin",
+  "name": "King Admin",
+  "short_name": "KingAdmin",
   "description": "Admin Management Panel",
   "start_url": "/",
   "display": "standalone",
@@ -21,6 +21,12 @@
     },
     {
       "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

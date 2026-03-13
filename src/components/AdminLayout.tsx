@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
+import Logo from "@/assets/logo.png";
 
 const navItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -83,9 +84,12 @@ const AdminLayout = () => {
     <div className="min-h-screen bg-background flex">
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex flex-col w-64 border-r border-border bg-card">
-        <div className="p-6 border-b border-border">
-          <h2 className="text-lg font-bold text-primary">Admin</h2>
-          <p className="text-xs text-muted-foreground mt-0.5">Management Panel</p>
+        <div className="p-6 border-b border-border flex items-center gap-3">
+          <img src={Logo} alt="Logo" className="w-10 h-10 rounded-lg object-contain bg-white" />
+          <div>
+            <h2 className="text-lg font-bold text-primary">Admin</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">Management Panel</p>
+          </div>
         </div>
         <div className="flex-1">
           <NavContent />
@@ -116,7 +120,10 @@ const AdminLayout = () => {
         }`}
       >
         <div className="flex items-center justify-between p-6 border-b border-border">
-          <h2 className="text-lg font-bold text-primary">Admin</h2>
+          <div className="flex items-center gap-3">
+            <img src={Logo} alt="Logo" className="w-10 h-10 rounded-lg object-contain bg-white" />
+            <h2 className="text-lg font-bold text-primary">Admin</h2>
+          </div>
           <button onClick={() => setMobileOpen(false)} className="text-muted-foreground hover:text-foreground">
             <X className="w-5 h-5" />
           </button>
